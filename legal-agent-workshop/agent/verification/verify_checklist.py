@@ -48,6 +48,56 @@ def load_reference(root: Path) -> list | None:
 
 # ---- yours ---------------------------------------------------------------------------
 
+from typing import cast
+
+from agent_kit.settings import model
+from openai.types.responses import Response
+
+PROMPT = """REFERENCE CHECKLIST. The first list is the reference: the questions a complete
+checklist for this case must cover. The second list is the agent's checklist.
+
+{reference}
+
+{checklist}
+
+For each reference item, decide whether some agent item covers it, even if it is
+worded differently. Also write feedback for the agent: what kind of question the
+checklist is missing, and any agent item that only restates background. The feedback
+must point to the direction only — never quote, paraphrase, or count the reference
+items, and never name their ids.
+
+Answer only with JSON: {{"covered": {{"<reference id>": true or false, ...}},
+"feedback": "<feedback, empty if nothing is missing>"}}"""
+
 
 def run_verification(ctx, items: list) -> dict:
-    raise NotImplementedError("verification/verify_checklist.py is not implemented yet")
+    reference = load_reference(ctx.root)
+    if reference is None:
+        return {"passed": True, "score": None, "feedback": ""}
+    response = cast(
+        Response,
+        ctx.client.responses.create(
+            model=model(),
+            input=PROMPT.format(
+                reference=json.dumps(reference, indent=1),
+                checklist=json.dumps(items, indent=1),
+            ),
+            text={"format": {"type": "json_object"}},
+        ),
+    )
+    try:
+        verdict = json.loads(response.output_text)
+        covered = verdict.get("covered") or {}
+    except (ValueError, AttributeError):
+        return {
+            "passed": False,
+            "score": 0.0,
+            "feedback": "The checklist could not be checked. Try setting it again.",
+        }
+    score = sum(1 for ref in reference if covered.get(ref.get("id"))) / len(reference)
+    passed = score == 1.0
+    return {
+        "passed": passed,
+        "score": score,
+        "feedback": "" if passed else (verdict.get("feedback") or ""),
+    }

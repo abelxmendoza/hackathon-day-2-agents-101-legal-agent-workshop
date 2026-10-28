@@ -23,7 +23,8 @@ here as one project with two sessions, not as separate repos.
 
 - **Build:** the verification layer in `legal-agent-workshop/agent/verification/` — the checks the tools call at fixed points so the agent cannot skip them.
   - `verify_checklist.py` — **built.** Does the agent's checklist cover the case's ground truth? Muse Spark marks each ground-truth item covered or not; code turns that into a score. Feedback points to what kind of question is missing without ever quoting, paraphrasing, or counting the ground-truth items.
-  - `verify_memo.py` — the memo rules (every item proven or escalated, every citation matching a recorded fact, nothing confidential cited, signature checks consistent, no open evidence requests). Build in progress with the session.
+  - `verify_memo.py` — **built and executed.** The memo rules: every item proven or escalated, every citation matching a recorded fact, nothing confidential cited, signature checks consistent, no open evidence requests. Run against scripted memos: a partial memo is refused with named problems; a complete memo passes. No model call — the memo is compared with the case record in code.
+  - `verify_checklist.py` additionally hardened during the session: the judge's coverage answer is accepted as a mapping, a list of covered ids, or a list of {id, covered} objects (a live run elsewhere crashed on the list shape).
   - Pre-built by Meta: the evidence-request check, the claims check, escalation after refused memos, and attorney sign-off.
 - **Notes:** [`agents-102-notes-2026-10-28.md`](agents-102-notes-2026-10-28.md) — session flow (incl. the Session 1 recap run: memo filed, checklist 5/5 proven), verification patterns, and what maps to my own project.
 

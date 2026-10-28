@@ -87,14 +87,35 @@ def run_verification(ctx, items: list) -> dict:
     )
     try:
         verdict = json.loads(response.output_text)
-        covered = verdict.get("covered") or {}
+        covered_raw = verdict.get("covered") or {}
     except (ValueError, AttributeError):
         return {
             "passed": False,
             "score": 0.0,
             "feedback": "The checklist could not be checked. Try setting it again.",
         }
-    score = sum(1 for ref in reference if covered.get(ref.get("id"))) / len(reference)
+
+    def is_covered(ref_id: str) -> bool:
+        # The judge is asked for a mapping, but a live model may answer with
+        # a list of covered ids, or a list of {id, covered} objects. Accept
+        # all three shapes; anything else counts as not covered.
+        if isinstance(covered_raw, dict):
+            return covered_raw.get(ref_id) is True
+        if isinstance(covered_raw, list):
+            for entry in covered_raw:
+                if isinstance(entry, str) and entry == ref_id:
+                    return True
+                if isinstance(entry, dict):
+                    entry_id = (
+                        entry.get("id")
+                        or entry.get("item")
+                        or entry.get("reference_id")
+                    )
+                    if entry_id == ref_id:
+                        return entry.get("covered") is True
+        return False
+
+    score = sum(1 for ref in reference if is_covered(ref.get("id"))) / len(reference)
     passed = score == 1.0
     return {
         "passed": passed,

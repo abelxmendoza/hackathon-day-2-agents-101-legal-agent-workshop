@@ -1,15 +1,19 @@
-# Hackathon Workshops — Agents 101 + Agents 102: Legal Agent Workshop
+# Hackathon Workshops — Agents 101 + Agents 102 + Workshop 3 (Fireworks / Muse Open Models)
 
-**Meta Global AI Developer Hackathon — live workshop sessions, October 27–28, 2026**
+**Meta Global AI Developer Hackathon — live workshop sessions, October 27–30, 2026**
 
-This repo groups my work from the hackathon's live agent workshops together: both
-sessions build on the same project — Meta's Legal Agent Workshop — so they live
-here as one project with two sessions, not as separate repos.
+This repo groups my work from the hackathon's live workshops together, not as
+separate repos. Sessions 1–2 build on the same project — Meta's Legal Agent
+Workshop — so they live here as one project with two sessions. Session 3 is a
+different topic (measuring Muse Open Models on Fireworks); Abel directed on
+Oct 30 that it be grouped here with the other workshops, so its notes live here
+too.
 
-## The workshop (Meta's names)
+## The workshops (Meta's names)
 
-- **Project:** [`meta-models/legal-agent-workshop`](https://github.com/meta-models/legal-agent-workshop) — "Legal Agent Workshop" (handbook: *Building a Multimodal Document Agent with Muse Code*)
+- **Sessions 1–2 project:** [`meta-models/legal-agent-workshop`](https://github.com/meta-models/legal-agent-workshop) — "Legal Agent Workshop" (handbook: *Building a Multimodal Document Agent with Muse Code*)
 - Participants clone Meta's workshop repo and launch Muse Code from `agent/` only, building a legal case-investigation agent for the fictional case **Northbridge v. Caldera** using Muse Code and Muse Spark (Meta Model API).
+- **Session 3:** "Building Specialized Intelligence on Fireworks — Muse Open Models" (described in the calendar listing as "From Inference to Training with Muse Open Models"), speaker Sinan Ozdemir. No hands-on build or repo for this session — notes only.
 
 ## Sessions
 
@@ -28,10 +32,20 @@ here as one project with two sessions, not as separate repos.
   - Pre-built by Meta: the evidence-request check, the claims check, escalation after refused memos, and attorney sign-off.
 - **Notes:** [`agents-102-notes-2026-10-28.md`](agents-102-notes-2026-10-28.md) — session flow (incl. the Session 1 recap run: memo filed, checklist 5/5 proven), verification patterns, and what maps to my own project.
 
+### Session 3 — Building Specialized Intelligence on Fireworks: Muse Open Models (Fri Oct 30, 9:00–10:00 AM PT, speaker Sinan Ozdemir)
+
+- **Topic:** "From Inference to Training with Muse Open Models." The slide Abel photographed live is the measurement step — **"MEASURE IT: The recipe: models, benches, grader, dial"**:
+  1. **The models** — Muse Spark Open vs DeepSeek V4.1 Flash, both at low effort.
+  2. **The benches** — GSM8K, BoolQ, NQ-Open, ARC-Easy: 100 each.
+  3. **The grader** — Plain Python per answer type. No LLM judge.
+  4. **The dial** — Then Muse alone, from low to xhigh effort.
+- **Notes:** [`session-3-fireworks-muse-open-models-notes-2026-10-30.md`](session-3-fireworks-muse-open-models-notes-2026-10-30.md) — the slide transcribed exactly as shown, and why the recipe maps to RobotForge's own fixed-set, code-graded provider sweep. No build for this session; notes only.
+
 ## What's intentionally not in this copy
 
 - `agent/.env` (API key file — never committed), `agent/.venv/`, and `agent/workspace/` runtime data (seeded inbox copies and run state).
 - The binary case documents (the fictional case PDFs, page-render PNGs, and one photo in `cases/` and `world/follow_up/`) — this upload went through a text-only path. The originals are in Meta's upstream repo, linked above; everything needed to read the code, handbook, and notes is here.
+- Abel's screenshot of the Session 3 stream (a binary photo) — same text-only path; the Session 3 notes transcribe the slide it shows.
 
 ## Credit
 

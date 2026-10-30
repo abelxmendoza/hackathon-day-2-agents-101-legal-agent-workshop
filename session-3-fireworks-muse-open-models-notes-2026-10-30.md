@@ -135,6 +135,29 @@ The diagram is the standard loop: an AGENT ("the model we train," labeled Muse G
 
 RobotForge parallel worth noting: RL's entry requirement is exactly a trustworthy 0-to-1 grader — which is the thing RobotForge already builds (deterministic validation + the 5% / 5° gate). SFT taught the router to imitate labels; RL would let a model learn from scored attempts instead. That is a post-hackathon direction, not a this-week one — RL is also the one method the Fireworks promotion does NOT cover.
 
+## Slide: "TRAIN IT — The recipe: model, data, surfaces, eval" (photo + Abel's narration, ~9:46 AM PT)
+
+Abel's narration: **"the cookbook on fireworks has more examples. we're going to use muse glimmer to fine tune it on some data set."**
+
+The recipe slide, verbatim:
+
+1. **THE MODEL** — Muse Glimmer 30B + LoRA rank 8. SFT free until Nov 30.
+2. **THE DATA** — 600 prompts from the cookbook's prompt-router case study.
+3. **THE SURFACE** — Serverless Training: your process runs the loop. No upload.
+4. **THE EVAL** — Base vs tuned on 40 held-out prompts, same decoding.
+
+Same four-part shape as the earlier MEASURE IT slide (models / benches / grader / dial → model / data / surface / eval). This is the exact recipe the cloned notebook 3 implements — and the exact recipe Torque's own run on Abel's Fireworks account is following (spawned ~9:41 AM PT; the cookbook's other case studies are the "more examples" Abel noted).
+
+## Slide: "TRAIN IT — One row of training data" (photo, ~9:46 AM PT)
+
+Verbatim substance:
+
+"Chat JSONL, one example per line. The model learns to answer the user turn with a compact JSON decision. Loss lands only on the assistant reply. The prepare step renders one row with the Muse Glimmer tokenizer to confirm it."
+
+The row's anatomy, as diagrammed: **system** (classifier intro + JSON schema, no rule) → **user** (example shown: "Design a sharded rate limiter...") → **reply** (complexity, math, code, reasoning, route) → **loss** (only on the reply tokens) → **result** (a LoRA adapter in your account).
+
+Footer: "Your own data uses the same format: {"messages": [system, user, assistant]}." — i.e., the same starter trains on Abel's own chat JSONL later; nothing about the format is router-specific.
+
 ## Notebook 2 — the reasoning-effort sweep (photos, ~9:33 AM PT)
 
 `muse_reasoning_sweep.ipynb`, in the presenter's words: "Same short-answer suite as the Muse vs DeepSeek demo, but Muse only, sweeping the full effort ladder: minimal → low → medium → high → xhigh → max." And the stated point: **"more effort is not always better on these easy short-answer tasks (Muse often peaks at low)."**

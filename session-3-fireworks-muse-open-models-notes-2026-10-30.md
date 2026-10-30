@@ -60,6 +60,18 @@ Also in the folder: `muse_effort_sweep.png`, `router_base_vs_tuned.png`, `run_si
 
 This is the presenter's experiments repo, shown on his screen — Abel did not clone or build it during the session, as far as the photos show.
 
+## Checking the models on Fireworks (~9:17 AM PT, Abel's narration + photo)
+
+Abel's own description of this part, in his words: checking models and capabilities on Fireworks — trending, and what people are using. Muse Spark shows token prices; Muse Glimmer does not. Clicking **Serverless** shows the models you can run without having to create a dedicated deployment.
+
+What the photo itself shows:
+
+- The Fireworks console **Models** page (Explore → Models): **334 models**, sorted by **Trending**.
+- Left nav — Create: Serverless, Deployments, Training, Batch API. Explore: Models, Playgrounds, Nexus. Manage: Reservations, Custom Models, Datasets.
+- Rows carry per-model pricing in $/M (uncached / cached / output), capability tags (Serverless, Tunable, Function-calling), and context length — **the actual price figures are not legible in the photo, so none are quoted here.**
+- Legible trending/new names at the top of the list: FireRouter with Opus, MiniMax M2.1 Flash, DeepSeek V4.1 Flash, GLM-5.5 (further rows, incl. a GLM Flash and a Pro-RL model, were cut off or too blurred to name reliably).
+- Point that matters for the workshop's arc: Serverless is the no-deployment path — the same way RobotForge already calls Muse Spark Open on Fireworks — while a dedicated deployment (and the Cookbook's training loops) is the step you take only when you actually need your own tuned model, e.g. the Glimmer router in notebook 3.
+
 ## Resource shown: Fireworks AI Cookbook
 
 The presenter also showed the public GitHub repo **fw-ai/cookbook** ("Fireworks AI Cookbook", Apache-2.0): "Recipes and resources for training, building generative AI with Fireworks" (fireworks.ai/docs). Its README describes training loops and worked examples for RL, preference optimization, SFT, distillation, and embedding fine-tuning on Fireworks — the training half of this session's "From Inference to Training" arc, and the pointer to use if the Glimmer router fine-tune (notebook 3) is ever picked up.

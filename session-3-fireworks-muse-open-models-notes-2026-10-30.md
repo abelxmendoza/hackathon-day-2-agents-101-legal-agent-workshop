@@ -158,6 +158,14 @@ The row's anatomy, as diagrammed: **system** (classifier intro + JSON schema, no
 
 Footer: "Your own data uses the same format: {"messages": [system, user, assistant]}." — i.e., the same starter trains on Abel's own chat JSONL later; nothing about the format is router-specific.
 
+## The dataset, verified on Hugging Face (~9:49 AM PT)
+
+Abel's pointer ("prompt routing dataset on hugginface") checked directly against the HF API: **SupraLabs/Prompt-Routing-Dataset**, public, **MIT license**, last modified 2026-07-05. One train split of **992 examples** (single file, `router_dataset_openai_gpt-oss-120b.jsonl` — the labels were generated with gpt-oss-120b). Columns: `prompt`, `full_answer`, `complexity_score`, `primary_domain`, `coding_task`, `math_task`, `requires_reasoning`, `routing_choice`, `routing_justification` — which map one-to-one onto the router's output JSON (complexity / math / code / reasoning / route). The dataset card's stated purpose: train "Edge Orchestrators and Routing Models" so small local models don't attempt multi-step math or complex software tasks they would botch. The notebook samples 600 of the 992 (seed-0 shuffle) — so the router's training labels are another model's judgments, which is the audit caveat from earlier stated at the source.
+
+## Notebook 3 intro, photographed (~9:49 AM PT) — matches the cloned repo verbatim
+
+Abel photographed the top of `muse_glimmer_train_router.ipynb` ("Part III: Train Muse Glimmer to be the router"). Its text matches the copy Torque cloned, including: "In Part II we built a router by hand: measure, make a table, put a classifier in front. Here we **train a model to make the decision itself**." Data line confirms the counts: "public SupraLabs/Prompt-Routing-Dataset on Hugging Face (**992 prompts; we train on 600**)". The promo boundary is stated in the notebook itself: "The free promotion covers LoRA SFT jobs **started before 2026-12-01 00:00 PT**. It does not cover RL, DPO, full-parameter training, deployments, or sampling outside the training run. The Serverless path samples about 80 answers to compare base and tuned; that sampling is billed at normal per-token rates, and `launch` prints the cost." And the data-handling promise: "This notebook never calls `datasets.upload`. Data stays local (built from Hugging Face) and is streamed by the Serverless Training client." Setup cell is the cookbook clone + pinned install (transformers==5.10.4) that Torque's own run is executing. (The photo shows only the placeholder `fw-...` for the API key — no real key on screen.)
+
 ## Notebook 2 — the reasoning-effort sweep (photos, ~9:33 AM PT)
 
 `muse_reasoning_sweep.ipynb`, in the presenter's words: "Same short-answer suite as the Muse vs DeepSeek demo, but Muse only, sweeping the full effort ladder: minimal → low → medium → high → xhigh → max." And the stated point: **"more effort is not always better on these easy short-answer tasks (Muse often peaks at low)."**

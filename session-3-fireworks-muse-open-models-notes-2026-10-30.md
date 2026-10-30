@@ -64,9 +64,19 @@ Also in the folder: `muse_effort_sweep.png`, `router_base_vs_tuned.png`, `run_si
 | string | NQ-Open |
 | choice | ARC-Easy |
 
-"Models run on Fireworks serverless. Grading is deterministic (number within 1%, yes/no match, string alias match, letter match), 100 per bench." The head-to-head section runs both models at `reasoning_effort=low`; its results table (Bench | Muse | DeepSeek | Δ) was cut off at the bottom of the photo — **no scores were captured, and none are quoted here.**
+"Models run on Fireworks serverless. Grading is deterministic (number within 1%, yes/no match, string alias match, letter match), 100 per bench." The head-to-head section runs both models at `reasoning_effort=low`; its results table (Bench | Muse | DeepSeek | Δ) was cut off at the bottom of that photo — the results themselves arrived in Abel's next photo, below.
 
 This is the presenter's experiments repo, shown on his screen — Abel did not clone or build it during the session, as far as the photos show.
+
+## Head-to-head results (photo, ~9:26 AM PT) — APPROXIMATE readings, not verified figures
+
+Abel's next photo shows the notebook's results charts (green = Muse Spark Open, grey = DeepSeek V4.1 Flash). The photo is blurred, so the bar labels below are best readings, flagged as approximate — the pattern is clear even where a digit is not:
+
+- **Left chart — accuracy by answer type:** Muse is ahead or tied in every type. Number (GSM8K): Muse ≈100 vs DeepSeek ≈95. Yes/no (BoolQ): ≈88 vs ≈88, a tie. String (NQ-Open): the biggest gap — Muse ≈64 vs DeepSeek ≈53. Choice (ARC-Easy): ≈92 vs ≈92, a tie.
+- **Right chart — overall:** Muse ≈84.5 vs DeepSeek ≈81.3 — Muse ahead by roughly 3 points overall.
+- Below the charts, a next section heading begins "Where Muse already leads publicly…" (rest cut off).
+
+Treat these as chart readings from a photo, not as the notebook's recorded numbers; if the results table itself gets photographed or the repo is shared, the exact figures should replace these.
 
 ## Checking the models on Fireworks (~9:17 AM PT, Abel's narration + photo)
 
@@ -84,6 +94,20 @@ What the photo itself shows:
 
 The presenter also showed the public GitHub repo **fw-ai/cookbook** ("Fireworks AI Cookbook", Apache-2.0): "Recipes and resources for training, building generative AI with Fireworks" (fireworks.ai/docs). Its README describes training loops and worked examples for RL, preference optimization, SFT, distillation, and embedding fine-tuning on Fireworks — the training half of this session's "From Inference to Training" arc, and the pointer to use if the Glimmer router fine-tune (notebook 3) is ever picked up.
 
+## Abel's question during the session (~9:24 AM PT): can the router pick from more than two models?
+
+Abel's definition, in his words: route means picking one model from a list of models. He asked whether a third system can intelligently route between the models, and whether you can route more than two at the same time.
+
+Answer (Torque, in-session): yes — a router is just a classifier, and two models is the smallest case, not the limit. The workshop's notebook 3 trains Glimmer to pick between two; the same setup extends to N models by making the router's output one label out of N:
+
+- **Labels come from the benchmark:** run every candidate model over the test set and grade deterministically; each prompt's label is the model that did best on it (ties broken by cheapest/fastest that still passes).
+- **Router:** fine-tune the small model (Glimmer) to predict that label from the prompt alone.
+- **At run time:** the router sees the prompt and picks exactly one model from the list — only that model runs, so you pay for the router plus one model, never all of them.
+- **What gets harder with more models:** you need enough graded examples per model or the rare classes never get picked; and you want a confidence fallback — when the router is unsure, send the prompt to the strongest default model instead of guessing.
+- **Not the same as an ensemble:** routing picks one; ensembling runs several and combines answers. Routing is the cheap one.
+
+RobotForge note: what the live endpoint has today is a *fallback chain* (Baseten primary → Fireworks on failure), which reacts to errors. A router would be the step before that — choosing per request, e.g. by description type — and its training labels could come straight from the existing 24-description sweep results.
+
 ## Why this maps to Abel's work
 
 - The recipe is the same discipline RobotForge already uses: fix the models and the effort level, run a fixed set of benches, grade with plain code instead of a model judge, then vary one dial at a time. RobotForge's own provider sweep did the equivalent for the describe step (fixed 24-description set, code-side parsing/validation, per-provider results) — and Agents 102 made the same point for verification: deterministic first, judge second.
@@ -92,5 +116,5 @@ The presenter also showed the public GitHub repo **fw-ai/cookbook** ("Fireworks 
 ## Not captured
 
 - Unlike Sessions 1–2, Abel did no hands-on build in this session — there is no Session 3 project tree in this repo, only these notes. The notebook and experiments repo above are the presenter's, shown on the stream.
-- The head-to-head results (the Bench | Muse | DeepSeek | Δ table) and the reasoning-sweep results were below the fold in Abel's photos — not captured, not quoted.
+- The head-to-head results table (Bench | Muse | DeepSeek | Δ) as exact numbers, and the reasoning-sweep results, were not captured — the results *charts* were photographed (see above), but their bar labels are approximate readings from a blurred photo, not verified figures.
 - Abel's screenshots of the stream are not uploaded here (this repo is pushed through a text-only path; the screenshots stay in Abel's own media library).

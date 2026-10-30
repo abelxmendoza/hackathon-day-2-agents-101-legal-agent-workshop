@@ -172,6 +172,12 @@ Abel photographed the top of `muse_glimmer_train_router.ipynb` ("Part III: Train
 
 **Step 2 (Serverless plan):** "Managed SFT needs a dataset in your Fireworks account (`datasets.create` + `datasets.upload`). Uploads are currently disabled on many accounts…, so this notebook uses **Serverless Training** instead: the starter validates the local JSONL, holds out rows for eval, and trains on the shared pool." The presenter's actual plan output is visible: account `pyroworks`, run at 2026-10-29T18:03:53Z, promotion active with deadline `2026-12-01T00:00:00-08:00`, base model `accounts/fireworks/models/muse-glimmer-30b`, method LoRA SFT, run_id `r20261029-180353`, holdout_rows 40, train_rows "all remaining rows." (His file paths show the run executed inside a Claude local-agent-mode session on his Mac — the presenter built and ran this with Claude assistance.)
 
+## Training log + results chart, photographed (~9:57 AM PT) — the loss curve and the before/after
+
+**The training log (photo-40):** per-step loss for the LoRA run — step 1: **0.5725**, step 2: **0.2252**, then the 0.02–0.09 band for the remaining steps, ending near **0.04** at step 35. (Abel's gloss, in his words: "lose value aka error" — right: the loss is the training-time error score, how far the model's answers sit from the labeled answers; it is the signal the optimizer minimizes, distinct from the held-out grade below.) The same screen shows the base model's eval summary line (exact_match 0.025, unterminated 6, prompt_tokens 11,014, sampled_tokens 33,372, field accuracies matching the repo).
+
+**The result chart (photo-41), "before and after" in Abel's words:** left panel = train loss over 35 steps (the 0.57 spike collapsing to ~0.02). Right panel = base vs tuned accuracy on the 40 held-out prompts: complexity 42→60, math 78→98, code 75→100, reasoning 42→100, route 22→90, exact match 2→57. Text above the chart: "route accuracy (the decision): 22.5% → 90.0%; exact match (all fields): 2.5% → 57.5%; McNemar (paired, exact match): p = 4.77e-07 (22 fixed, 0 broken); unterminated answers: base 6, tuned 0." Every figure matches the cloned repo's stored outputs.
+
 ## Notebook 2 — the reasoning-effort sweep (photos, ~9:33 AM PT)
 
 `muse_reasoning_sweep.ipynb`, in the presenter's words: "Same short-answer suite as the Muse vs DeepSeek demo, but Muse only, sweeping the full effort ladder: minimal → low → medium → high → xhigh → max." And the stated point: **"more effort is not always better on these easy short-answer tasks (Muse often peaks at low)."**

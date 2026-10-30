@@ -32,6 +32,8 @@ Next slide, verbatim:
 > 4 benches x 100 questions x 2 models, effort = low
 > Responses cache to results.jsonl and resume
 
+**Why low effort for the head-to-head (Abel's narration, ~9:21 AM PT):** with the benchmarks in hand, everything is set to low effort for the comparison run — it ran faster and spit out fewer reasoning tokens. Low is the headline setting for the two-model run; the effort dial gets swept afterwards, on Muse alone (notebook 2), where the cost/accuracy trade is the thing being measured.
+
 The notebook's Setup cell was visible behind the slide. Legible parts only — the photo does not support a verbatim code transcription:
 
 - Live mode line: `RUN_SWEEP = True` — re-runs Fireworks (resumable).

@@ -41,6 +41,10 @@ The notebook's Setup cell was visible behind the slide. Legible parts only — t
 - Model names in the code: `MUSE = "Muse Spark Open"`, `DS = "DeepSeek V4.1 Flash"`.
 - Results are cached to `results.jsonl` next to the notebook (with a fallback path into `experiments/meta-hackathon-muse/`), and the repo root's `.env` is loaded via `load_dotenv` — keys stay in `.env`, same rule as Sessions 1–2.
 
+## The presenter's experiments repo — PULLED (~9:35 AM PT)
+
+The repo is public: **`sinanuozdemir/ai-experiments`** (the presenter's surname is spelled Uzdemir in his GitHub handle; session listings show "Ozdemir"). Abel asked if I had pulled it; I found it by searching GitHub code for the notebook name and cloned it: local copy at `~/workspace/hackathon/ai-experiments/`, HEAD `69cb19f` ("tweaks"). `experiments/` contains four folders: `meta-hackathon-muse`, `reasoning-effort-uipad`, `difficulty-router-langchain`, and `scion`. The exact results tables in this file come from `experiments/meta-hackathon-muse/README.md`. Note: `results.jsonl` is listed in that README's file table but is NOT in the cloned folder (it's the presenter's local cache). The chart PNGs from the notebooks (demo_pass_by_type.png, muse_effort_sweep.png, router_base_vs_tuned.png, and the muse_ahead_* slide assets) ARE in the repo.
+
 ## The experiments repo the presenter worked from
 
 Shown on GitHub (branch `main`, path `ai-experiments / experiments / meta-hackathon-muse`). Its README, as legible in the photo:
@@ -68,15 +72,21 @@ Also in the folder: `muse_effort_sweep.png`, `router_base_vs_tuned.png`, `run_si
 
 This is the presenter's experiments repo, shown on his screen — Abel did not clone or build it during the session, as far as the photos show.
 
-## Head-to-head results (photo, ~9:26 AM PT) — APPROXIMATE readings, not verified figures
+## Head-to-head results — EXACT figures from the presenter's repo (pulled ~9:35 AM PT, see below)
 
-Abel's next photo shows the notebook's results charts (green = Muse Spark Open, grey = DeepSeek V4.1 Flash). The photo is blurred, so the bar labels below are best readings, flagged as approximate — the pattern is clear even where a digit is not:
+Both models at `reasoning_effort=low`, from the official README table in `experiments/meta-hackathon-muse/`:
 
-- **Left chart — accuracy by answer type:** Muse is ahead or tied in every type. Number (GSM8K): Muse ≈100 vs DeepSeek ≈95. Yes/no (BoolQ): ≈88 vs ≈88, a tie. String (NQ-Open): the biggest gap — Muse ≈64 vs DeepSeek ≈53. Choice (ARC-Easy): ≈92 vs ≈92, a tie.
-- **Right chart — overall:** Muse ≈84.5 vs DeepSeek ≈81.3 — Muse ahead by roughly 3 points overall.
-- Below the charts, a next section heading begins "Where Muse already leads publicly…" (rest cut off).
+| Bench | Muse | DeepSeek | Δ |
+|---|---:|---:|---:|
+| GSM8K | **99.0** | 96.0 | +3.0 |
+| NQ-Open | **69.0** | 62.0 | +7.0 |
+| BoolQ | 90.0 | 91.0 | −1.0 |
+| ARC-Easy | 96.0 | 97.0 | −1.0 |
+| **Overall** | **88.5** | 86.5 | **+2.0** |
 
-Treat these as chart readings from a photo, not as the notebook's recorded numbers; if the results table itself gets photographed or the repo is shared, the exact figures should replace these.
+So Muse's overall win comes from GSM8K and especially NQ-Open (+7); DeepSeek actually edges BoolQ and ARC-Easy by a point each. The notebook also plots published Specialized Intelligence Index results where Muse leads DeepSeek — that is the "Where Muse already leads publicly" section visible at the bottom of Abel's chart photo.
+
+**Correction note:** Abel's ~9:26 AM chart photo was blurred, and my first readings logged here (Muse ≈84.5 vs DeepSeek ≈81.3 overall; NQ-Open ≈64 vs ≈53; BoolQ/ARC-Easy as ties) were wrong in detail. Abel asked whether I had pulled the official repo — I hadn't — so I found and cloned it (public: `sinanuozdemir/ai-experiments`, HEAD `69cb19f`, local copy at `~/workspace/hackathon/ai-experiments/`), and the table above replaces those readings. The sweep chart readings below, by contrast, matched the repo exactly.
 
 ## Checking the models on Fireworks (~9:17 AM PT, Abel's narration + photo)
 
@@ -94,6 +104,30 @@ What the photo itself shows:
 
 The presenter also showed the public GitHub repo **fw-ai/cookbook** ("Fireworks AI Cookbook", Apache-2.0): "Recipes and resources for training, building generative AI with Fireworks" (fireworks.ai/docs). Its README describes training loops and worked examples for RL, preference optimization, SFT, distillation, and embedding fine-tuning on Fireworks — the training half of this session's "From Inference to Training" arc, and the pointer to use if the Glimmer router fine-tune (notebook 3) is ever picked up.
 
+## Notebook 2 — the reasoning-effort sweep (photos, ~9:33 AM PT)
+
+`muse_reasoning_sweep.ipynb`, in the presenter's words: "Same short-answer suite as the Muse vs DeepSeek demo, but Muse only, sweeping the full effort ladder: minimal → low → medium → high → xhigh → max." And the stated point: **"more effort is not always better on these easy short-answer tasks (Muse often peaks at low)."**
+
+Setup (legible in the photos): `RUN_SWEEP = True`, `N_PER_BENCH = 100`, `EFFORTS = ["minimal", "low", "medium", "high", "xhigh", "max"]` (with the comment that Muse rejects "none"), `MUSE = "Muse Spark Open"`. Results cache to the shared `results.jsonl`; the sweep fills only missing (Muse, effort, id) rows and reuses the existing low / partial high cache. The scoreboard is a pivot of pass@1 by bench × effort.
+
+**Results — EXACT, from the repo README (my chart-photo readings matched these to the decimal):**
+
+| Bench | minimal | low | medium | high | xhigh | max |
+|---|---:|---:|---:|---:|---:|---:|
+| GSM8K | 98 | **99** | **99** | 94 | 98 | 97 |
+| BoolQ | **93** | 90 | **93** | 86 | 89 | 84 |
+| NQ-Open | 64 | **69** | 67 | 64 | 66 | 65 |
+| ARC-Easy | 95 | **96** | 92 | 83 | 85 | 86 |
+| **Overall** | 87.5 | **88.5** | 87.8 | 81.8 | 84.5 | 83.0 |
+
+The README's own summary: "On these easy tasks Muse peaks at `low`, with `minimal` and `medium` within a point. Higher effort costs more tokens and lowers pass@1. **Part of the `max` drop is truncation: 19 of 400 `max` answers were empty because reasoning used up the 2,048-token output limit.**" Chart saved by the notebook as `muse_effort_sweep.png` (also in the cloned repo).
+
+Abel's reaction, in his words: **"you would assume more reasoning would lead to better results."** It doesn't here — that's the demo's designed point, and now there's a concrete mechanism for part of it: at max effort the model sometimes thinks so long it runs out of output budget and returns *nothing*. The rest is the usual overthinking tax on easy questions — second-guessing and drift, paid for in extra tokens. Reasoning effort pays off on hard multi-step problems, not one-line answers. Same lesson as the head-to-head setup: measure on YOUR task type instead of assuming.
+
+## Sibling experiment spotted in the same repo (photo, ~9:33 AM PT)
+
+Abel also photographed the GitHub preview of a different notebook in the presenter's repo: `experiments/reasoning-effort-uipad/uipad_reasoning_sweep.ipynb` (1,342 lines). Its centerpiece: **"Efficiency frontier — all models (up-and-left is better)"** — pass@1 (zoomed) against cost per successful task ($, log scale) for four models (K3, Opus 4.8, 5.6 Sol, 5.5), each traced across effort levels. Every model's line rises from "none" to a peak around low–high, then bends back down at max — more cost, less accuracy. Its per-type code lists answer types counting / yes-no / string / **coords** — a vision-QA suite, unlike the text-only Meta hackathon one. Same lesson from the cost side: the winner is the cheapest point on the frontier, not the most reasoning you can buy.
+
 ## Abel's question during the session (~9:24 AM PT): can the router pick from more than two models?
 
 Abel's definition, in his words: route means picking one model from a list of models. He asked whether a third system can intelligently route between the models, and whether you can route more than two at the same time.
@@ -108,6 +142,8 @@ Answer (Torque, in-session): yes — a router is just a classifier, and two mode
 
 RobotForge note: what the live endpoint has today is a *fallback chain* (Baseten primary → Fireworks on failure), which reacts to errors. A router would be the step before that — choosing per request, e.g. by description type — and its training labels could come straight from the existing 24-description sweep results.
 
+**What the workshop's own router actually is (exact, from the repo README):** notebook 3 fine-tunes **Muse Glimmer 30B with LoRA SFT** on the SupraLabs/Prompt-Routing-Dataset (600 training prompts). Given a prompt, the tuned model returns JSON — `complexity`, `math`, `code`, `reasoning`, `route` — and the router sends the prompt to **DeepSeek V4.1 Flash (small route) or Muse Spark Open (big route)**. Base vs tuned on 40 held-out prompts: **route accuracy 22.5% → 90.0%**; exact match on all fields 2.5% → 57.5%; unterminated answers 6 → 0 (McNemar: 22 fixed, 0 broken, p = 4.8e-7). Training cost $0 under the promotion; the tuned LoRA deploys as `muse-router-demo` and bills per GPU-hour, so the README says to delete the deployment afterward. LoRA SFT is free for jobs started before 2026-12-01. Also relevant: the same repo's root README lists a sibling experiment, `experiments/difficulty-router-langchain` — "Does routing easy tasks to a cheap model and hard ones to a strong model cut cost per successful task without losing accuracy?" — the routing question asked in exactly Abel's terms.
+
 ## Why this maps to Abel's work
 
 - The recipe is the same discipline RobotForge already uses: fix the models and the effort level, run a fixed set of benches, grade with plain code instead of a model judge, then vary one dial at a time. RobotForge's own provider sweep did the equivalent for the describe step (fixed 24-description set, code-side parsing/validation, per-provider results) — and Agents 102 made the same point for verification: deterministic first, judge second.
@@ -116,5 +152,5 @@ RobotForge note: what the live endpoint has today is a *fallback chain* (Baseten
 ## Not captured
 
 - Unlike Sessions 1–2, Abel did no hands-on build in this session — there is no Session 3 project tree in this repo, only these notes. The notebook and experiments repo above are the presenter's, shown on the stream.
-- The head-to-head results table (Bench | Muse | DeepSeek | Δ) as exact numbers, and the reasoning-sweep results, were not captured — the results *charts* were photographed (see above), but their bar labels are approximate readings from a blurred photo, not verified figures.
+- ~~The head-to-head results table and reasoning-sweep results as exact numbers~~ — RESOLVED ~9:35 AM PT: Abel asked whether the official repo had been pulled; it was then found (public, `sinanuozdemir/ai-experiments`) and cloned, and the exact tables above now come from its README. Only the presenter's `results.jsonl` raw cache is not in the repo.
 - Abel's screenshots of the stream are not uploaded here (this repo is pushed through a text-only path; the screenshots stay in Abel's own media library).

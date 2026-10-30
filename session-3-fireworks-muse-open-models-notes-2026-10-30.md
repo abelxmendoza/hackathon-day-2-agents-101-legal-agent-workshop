@@ -178,6 +178,17 @@ Abel photographed the top of `muse_glimmer_train_router.ipynb` ("Part III: Train
 
 **The result chart (photo-41), "before and after" in Abel's words:** left panel = train loss over 35 steps (the 0.57 spike collapsing to ~0.02). Right panel = base vs tuned accuracy on the 40 held-out prompts: complexity 42→60, math 78→98, code 75→100, reasoning 42→100, route 22→90, exact match 2→57. Text above the chart: "route accuracy (the decision): 22.5% → 90.0%; exact match (all fields): 2.5% → 57.5%; McNemar (paired, exact match): p = 4.77e-07 (22 fixed, 0 broken); unterminated answers: base 6, tuned 0." Every figure matches the cloned repo's stored outputs.
 
+## The payoff demo, photographed (~9:58 AM PT) — trained router live in front of two models
+
+The final notebook section runs 4 demo prompts through the **deployed** tuned router (`accounts/pyroworks/deployments/muse-router-demo` — the paid-deployment step Torque is holding on Abel's account):
+
+1. "What's the capital of Turkey?" → `{complexity 1, math false, code false, reasoning false, route "small model"}` → DeepSeek V4.1 Flash, decide 3.27s, **$0.000051** → "Ankara."
+2. "Convert 72 Fahrenheit to Celsius." → `{2, math true, reasoning true, route "big model"}` → Muse Spark Open, 2.81s, $0.002165 → 22.2°C with formula.
+3. "Design a sharded rate limiter for a multi-region API gateway and explain the failure modes." → `{4, reasoning true, route "big model"}` → Muse Spark Open, 2.97s, $0.004555.
+4. "Prove there are infinitely many primes, then generalize to primes of the form 4k+3." → `{4, math true, reasoning true, route "big model"}` → Muse Spark Open, 2.98s, $0.004561.
+
+Honest read: the economics are the point — the small-model answer cost ~40–90× less than a big-model answer, and the router's decision itself takes ~3s. But the tuned router is not perfect: the unit conversion (trivial arithmetic) was arguably over-routed to big with reasoning:true, and the rate-limiter design prompt got `code: false` despite being a systems-design ask — consistent with complexity being the tuned model's weakest field (60%).
+
 ## Notebook 2 — the reasoning-effort sweep (photos, ~9:33 AM PT)
 
 `muse_reasoning_sweep.ipynb`, in the presenter's words: "Same short-answer suite as the Muse vs DeepSeek demo, but Muse only, sweeping the full effort ladder: minimal → low → medium → high → xhigh → max." And the stated point: **"more effort is not always better on these easy short-answer tasks (Muse often peaks at low)."**

@@ -104,6 +104,21 @@ What the photo itself shows:
 
 The presenter also showed the public GitHub repo **fw-ai/cookbook** ("Fireworks AI Cookbook", Apache-2.0): "Recipes and resources for training, building generative AI with Fireworks" (fireworks.ai/docs). Its README describes training loops and worked examples for RL, preference optimization, SFT, distillation, and embedding fine-tuning on Fireworks — the training half of this session's "From Inference to Training" arc, and the pointer to use if the Glimmer router fine-tune (notebook 3) is ever picked up.
 
+## Slide: "Which method, when" (photo, ~9:39 AM PT) — how notebook 3's training method was chosen
+
+A comparison table (source line on the slide: "Rules of thumb, not guarantees. Source: Field Guide to Training Modern AI (Fireworks), Fig. 4.2"):
+
+| | Supervised Fine-Tuning (SFT) | Direct Preference Optimization (DPO) | Reinforcement Learning (RL) |
+|---|---|---|---|
+| You provide | Complete, correct examples ending on the model's turn | Pairs: one preferred, one rejected answer | Prompts + rewards, an environment and a grader |
+| Explores on its own? | No | No | Yes |
+| Relative cost | Lowest | Low | Highest |
+| Use it when | There's one right answer, or a format, tone or teacher to copy | Several answers work and you know which is better | The model already succeeds some of the time |
+| Watch out for | Memorizing instead of generalizing | A poor fit when there's one right answer | It optimizes whatever the reward measures, loopholes included |
+| Where you'll see it | **Today: Muse Glimmer as the router** | Managed DPO runs on Glimmer too | See our cookbook for more! |
+
+So the router is trained with SFT precisely because routing has one right answer per prompt — the cheapest method is the right one. Abel's one-line narration of this segment: **"train muse glimmer to be a router."**
+
 ## Notebook 2 — the reasoning-effort sweep (photos, ~9:33 AM PT)
 
 `muse_reasoning_sweep.ipynb`, in the presenter's words: "Same short-answer suite as the Muse vs DeepSeek demo, but Muse only, sweeping the full effort ladder: minimal → low → medium → high → xhigh → max." And the stated point: **"more effort is not always better on these easy short-answer tasks (Muse often peaks at low)."**

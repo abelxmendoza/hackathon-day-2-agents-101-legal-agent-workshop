@@ -39,7 +39,8 @@ too.
   2. **The benches** — GSM8K, BoolQ, NQ-Open, ARC-Easy: 100 each.
   3. **The grader** — Plain Python per answer type. No LLM judge.
   4. **The dial** — Then Muse alone, from low to xhigh effort.
-- **Notes:** [`session-3-fireworks-muse-open-models-notes-2026-10-30.md`](session-3-fireworks-muse-open-models-notes-2026-10-30.md) — the slide transcribed exactly as shown, and why the recipe maps to RobotForge's own fixed-set, code-graded provider sweep. No build for this session; notes only.
+- **Follow-through shown live:** the head-to-head kickoff (`muse_vs_deepseek_demo.ipynb` — 4 benches x 100 questions x 2 models, effort = low, responses cached to `results.jsonl`), the presenter's experiments repo with its three notebooks (head-to-head, reasoning sweep, and a fine-tuned Muse Glimmer router), the deterministic grading rules per answer type (number within 1%, yes/no match, string alias match, letter match), and the Fireworks AI Cookbook (fw-ai/cookbook) as the training resource. No scores were visible in Abel's photos, so none are quoted.
+- **Notes:** [`session-3-fireworks-muse-open-models-notes-2026-10-30.md`](session-3-fireworks-muse-open-models-notes-2026-10-30.md) — the slides transcribed exactly as shown, the experiments-repo README as legible, and why the recipe maps to RobotForge's own fixed-set, code-graded provider sweep. No build for this session; notes only.
 
 ## What's intentionally not in this copy
 

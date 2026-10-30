@@ -189,6 +189,27 @@ The final notebook section runs 4 demo prompts through the **deployed** tuned ro
 
 Honest read: the economics are the point — the small-model answer cost ~40–90× less than a big-model answer, and the router's decision itself takes ~3s. But the tuned router is not perfect: the unit conversion (trivial arithmetic) was arguably over-routed to big with reasoning:true, and the rate-limiter design prompt got `code: false` despite being a systems-design ask — consistent with complexity being the tuned model's weakest field (60%).
 
+## Closing slide — "What to carry into your project" (photo, ~9:58 AM PT)
+
+Section header: LESSONS. Four columns, transcribed verbatim:
+
+- **GRADERS** — "Deterministic checks per answer type, read by hand."
+- **MEASURE FIRST** — "Muse peaked at low effort; more thinking scored lower."
+- **LOSS != ACCURACY** — "Loss flattened by step 3; the eval showed the gain."
+- **HOLD OUT** — "No test prompt, or a near copy, in training."
+
+The third column is the presenter's own version of the loss point from earlier in this session: the training loss flattened almost immediately (by step 3), so the loss curve alone would have told you little — the held-out eval is where the gain (22.5% → 90.0%) actually showed. All four lessons are the same doctrine as RobotForge's gate and Agents 102's verification layer: deterministic graders, measure before you tune, judge on held-out data, never train on your test.
+
+## Final slide — "Take it into your hackathon project" (photo, ~9:59 AM PT)
+
+Section header: BUILD IT. Three cards, transcribed verbatim:
+
+- **FREE — $0** — "Glimmer LoRA SFT until Nov 30." / "Glimmer SFT — Muse Glimmer 30B, free to train."
+- **CODE — 3** — "notebooks, ready for your data." / "Three notebooks — Ready to point at your own data and models."
+- **DOCS — 1 key** — "every call runs on one Fireworks key." / "Cookbook — github.com/fw-ai/cookbook"
+
+Footer: "Hackathon build window ends Nov 4; judging through Nov 9. Credit codes come through the Cerebral Valley form." — Session ends ~10:00 AM PT. Torque's own Glimmer router run on Abel's Fireworks account (same recipe, deployment step held for his approval) continues in the background.
+
 ## Notebook 2 — the reasoning-effort sweep (photos, ~9:33 AM PT)
 
 `muse_reasoning_sweep.ipynb`, in the presenter's words: "Same short-answer suite as the Muse vs DeepSeek demo, but Muse only, sweeping the full effort ladder: minimal → low → medium → high → xhigh → max." And the stated point: **"more effort is not always better on these easy short-answer tasks (Muse often peaks at low)."**

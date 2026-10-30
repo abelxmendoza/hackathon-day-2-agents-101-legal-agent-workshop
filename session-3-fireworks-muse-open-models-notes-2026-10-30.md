@@ -119,6 +119,22 @@ A comparison table (source line on the slide: "Rules of thumb, not guarantees. S
 
 So the router is trained with SFT precisely because routing has one right answer per prompt — the cheapest method is the right one. Abel's one-line narration of this segment: **"train muse glimmer to be a router."**
 
+## Slide: "NEXT STEP — When you can score it: reinforcement learning" (photo, ~9:44 AM PT)
+
+Verbatim from the slide:
+
+"No answer key. The model learns from its own attempts.
+
+1. **Observe** — the agent sees the task
+2. **Act** — it calls a tool or answers
+3. **Reward** — a grader scores the try, 0 to 1
+4. **Learn** — weights shift toward reward
+5. **Repeat** — hundreds of times"
+
+The diagram is the standard loop: an AGENT ("the model we train," labeled Muse Glimmer + LoRA) acts on an ENVIRONMENT ("task, tools, grader") — action (tool calls, answers) flows down, state + reward flow back, next prompt comes in at the top. Footer: "Adapted from Field Guide to Training Modern AI, Fig. 4.4. The cookbook's serverless RL example runs on Muse Glimmer 30B."
+
+RobotForge parallel worth noting: RL's entry requirement is exactly a trustworthy 0-to-1 grader — which is the thing RobotForge already builds (deterministic validation + the 5% / 5° gate). SFT taught the router to imitate labels; RL would let a model learn from scored attempts instead. That is a post-hackathon direction, not a this-week one — RL is also the one method the Fireworks promotion does NOT cover.
+
 ## Notebook 2 — the reasoning-effort sweep (photos, ~9:33 AM PT)
 
 `muse_reasoning_sweep.ipynb`, in the presenter's words: "Same short-answer suite as the Muse vs DeepSeek demo, but Muse only, sweeping the full effort ladder: minimal → low → medium → high → xhigh → max." And the stated point: **"more effort is not always better on these easy short-answer tasks (Muse often peaks at low)."**

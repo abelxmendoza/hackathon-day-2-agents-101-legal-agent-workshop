@@ -122,6 +122,8 @@ Setup (legible in the photos): `RUN_SWEEP = True`, `N_PER_BENCH = 100`, `EFFORTS
 
 The README's own summary: "On these easy tasks Muse peaks at `low`, with `minimal` and `medium` within a point. Higher effort costs more tokens and lowers pass@1. **Part of the `max` drop is truncation: 19 of 400 `max` answers were empty because reasoning used up the 2,048-token output limit.**" Chart saved by the notebook as `muse_effort_sweep.png` (also in the cloned repo).
 
+Abel's follow-up, in his words (~9:37 AM PT): **"the cut off is usually at the medium effort reasoning — more effort does not mean better results."** The exact table backs the shape of that: the plateau is low–medium (88.5 / 87.8 overall; GSM8K ties low and medium at 99), and the cliff comes after medium — high drops to 81.8. So the useful cutoff is right where he put it: past medium you're paying more to get less.
+
 Abel's reaction, in his words: **"you would assume more reasoning would lead to better results."** It doesn't here — that's the demo's designed point, and now there's a concrete mechanism for part of it: at max effort the model sometimes thinks so long it runs out of output budget and returns *nothing*. The rest is the usual overthinking tax on easy questions — second-guessing and drift, paid for in extra tokens. Reasoning effort pays off on hard multi-step problems, not one-line answers. Same lesson as the head-to-head setup: measure on YOUR task type instead of assuming.
 
 ## Sibling experiment spotted in the same repo (photo, ~9:33 AM PT)
@@ -154,3 +156,25 @@ RobotForge note: what the live endpoint has today is a *fallback chain* (Baseten
 - Unlike Sessions 1–2, Abel did no hands-on build in this session — there is no Session 3 project tree in this repo, only these notes. The notebook and experiments repo above are the presenter's, shown on the stream.
 - ~~The head-to-head results table and reasoning-sweep results as exact numbers~~ — RESOLVED ~9:35 AM PT: Abel asked whether the official repo had been pulled; it was then found (public, `sinanuozdemir/ai-experiments`) and cloned, and the exact tables above now come from its README. Only the presenter's `results.jsonl` raw cache is not in the repo.
 - Abel's screenshots of the stream are not uploaded here (this repo is pushed through a text-only path; the screenshots stay in Abel's own media library).
+
+## Audit of the presenter's repo (Torque, ~9:40 AM PT, at Abel's request)
+
+Read after cloning: `run_simple_bench.py`, all three notebooks including their stored outputs, `MUSE_AHEAD.md`, `.gitignore`.
+
+**Verified — README claims match the code and the stored outputs:**
+- Grading is exactly as advertised: deterministic Python, no LLM judge (number within 1%, yes/no match, string normalized alias match, choice letter match); temperature 0; seed 7; the named dataset splits.
+- Head-to-head: the demo notebook's stored output reads "Muse Spark Open: 88.5% / DeepSeek V4.1 Flash: 86.5% / Muse lead: +2.0 pp, n=100/bench" — matches the README table. `MUSE_AHEAD.md` adds the paired count: of 400 items, Muse wins 16, DeepSeek wins 8, 376 tie — the +2.0 is real but thin.
+- Sweep: the notebook's stored output reproduces the overall-by-effort line exactly (87.5 / 88.5 / 87.8 / 81.8 / 84.5 / 83.0, "peak effort: low").
+- Router: stored outputs match the README to the decimal — base route accuracy 0.225 → tuned 0.900, exact match 0.025 → 0.575, unterminated 6 → 0, McNemar 22 fixed / 0 broken, p = 4.77e-07; LoRA rank 8 / alpha 32, 1 epoch, 560 train + 40 holdout from the 600-prompt dataset; training $0 under the promotion (deadline 2026-12-01, confirmed in the run plan output).
+- No secrets: `.gitignore` excludes `.env` and `*.jsonl`; a scan of the repo found no API keys.
+
+**Caveats — where the repo can't prove its own numbers, or the method has soft edges:**
+1. `results.jsonl` is gitignored, so the raw per-item data is NOT in the repo. The tables rest on the notebooks' stored outputs, not on data a reader can recompute. The "19 of 400 max answers empty" claim likewise can't be recounted from the repo — it's plausible (the code caps output at 2,048 tokens and an empty answer scores 0), but it is the author's word.
+2. `run_simple_bench.py` defaults to `N_PER_BENCH = 40`; the n=100 comes from the notebooks / CLI flag. Running the script bare would silently sample 40.
+3. String grading is lenient: normalized substring containment in either direction counts as correct. Same rule for both models, but NQ-Open — Muse's biggest win (+7) — is the bench it inflates most.
+4. Extractors grade the LAST number / yes-no / letter anywhere in the full answer text (string uses the last line only). By design with the "final answer on the last line" system prompt, but a wandering answer is graded on its last stray token.
+5. A failed API call is written as score 0 and marked done — the resume logic never retries it. `summarize()` skips failed rows; the notebook pivots average the score column including any. Whether any failures sit inside the published numbers can't be told from the repo.
+6. The router is evaluated on 40 held-out prompts, and its labels are the dataset's own complexity/route judgments — the tuned Glimmer learns to imitate those labels (90% agreement), which is not the same as measuring which downstream model actually answers better. For a RobotForge-style router, labels from measured outcomes (like the 24-description sweep) would be the stronger version.
+7. `MUSE_AHEAD.md` is candidly a slide deck: its talking point reads "UiPad *coordinates* favor DeepSeek; drop that panel," and the SII panel is explicitly the benches where Muse leads. Cherry-picked, but labeled as such in the file itself.
+
+**Verdict:** honest workshop code — no fabrication found; every headline number in the README traces to a stored notebook output or the grading code. The limits are reproducibility (raw data withheld by the gitignore) and small samples, not honesty.

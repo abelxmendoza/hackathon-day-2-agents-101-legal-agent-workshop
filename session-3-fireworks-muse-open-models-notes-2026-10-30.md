@@ -8,6 +8,12 @@
 - **Capture:** Abel attended live and photographed the stream at ~9:12 AM PT (the stream showed 186 attendees at that moment), then sent three follow-up photos at ~9:15 AM PT as the presenter moved from the slide into the demo notebook and the experiments repo. These notes record only what those photos show; wording that was not legible in a photo is paraphrased or flagged, never filled in.
 - **Grouped with:** Agents 101 (Oct 27) and Agents 102 (Oct 28) in the same workshops repo, at Abel's direction on Oct 30 — the hackathon's live workshops live together in one place, even though this session's topic (measuring open models on Fireworks) is different from the first two sessions' Legal Agent build.
 
+## The point of the session (Abel's summary, ~9:20 AM PT)
+
+In Abel's words: "We need an evaluation. A test set to make sure model A is better than model B. We need a benchmark evaluation — to prove that you chose the best model for your task."
+
+That is the whole recipe below in one line: you don't pick a model by reputation or by trying it twice — you build a fixed test set, grade it deterministically, and the numbers are the evidence for the choice. It is also exactly what RobotForge already did for its own model choice: a fixed 24-description test set (including deliberate traps) run through the real prompt/schema/validator across providers — Baseten (Muse Spark Open) 24/24, Meta 23/24, Fireworks 21/24 — which is why Baseten is the live endpoint's primary provider and the others are fallbacks. Chosen by measurement, not by default.
+
 ## Slide shown — "MEASURE IT"
 
 ### The recipe: models, benches, grader, dial
